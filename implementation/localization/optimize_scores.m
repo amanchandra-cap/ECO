@@ -1,4 +1,4 @@
-function [disp_row, disp_col, scale_ind] = optimize_scores(scores_fs, iterations)
+function [disp_row, disp_col, scale_ind, max_scale_response] = optimize_scores(scores_fs, iterations)
 
 % Maximizes the continuous convolution response (classification scores).
 

@@ -237,6 +237,7 @@ params.minimum_sample_weight = params.learning_rate*(1-params.learning_rate)^(2*
 
 res_norms = [];
 residuals_pcg = [];
+max_match_score = zeros(1, seq.len);
 
 while true
     % Read image
@@ -300,7 +301,16 @@ while true
             scores_fs = permute(gather(scores_fs_sum), [1 2 4 3]);
             
             % Optimize the continuous score function with Newton's method.
-            [trans_row, trans_col, scale_ind] = optimize_scores(scores_fs, params.newton_iterations);
+            [trans_row, trans_col, scale_ind, match_score] = optimize_scores(scores_fs, params.newton_iterations);
+            
+            % Find max match score for frame
+            if iter ==1
+                max_match_score(seq.frame) = match_score;
+            else
+                if match_score > max_match_score(seq.frame)
+                    max_match_score(seq.frame) = match_score;
+                end
+            end
             
             % Compute the translation vector in pixel-coordinates and round
             % to the closest integer pixel.
@@ -332,6 +342,12 @@ while true
             
             iter = iter + 1;
         end
+        
+                
+        % Visualization of match scores
+        figure(12);
+        plot(1:seq.frame, max_match_score(1:seq.frame));
+        
     end
     
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
