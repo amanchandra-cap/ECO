@@ -6,7 +6,7 @@
 setup_paths();
 
 % Load video information
-video_path = 'sequences/Crossing';
+video_path = '../BACF_toUpload/seq/Basketball';
 [seq, ground_truth] = load_video_info(video_path);
 
 % Run ECO
